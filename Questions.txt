@@ -1,0 +1,31 @@
+1; Question, je suis un mammifère marin, intelligent et qui aiment sauter hors de l'eau. Je me trouve assez souvent à Tamarin. Qui suis je ?
+Réponse : dauphin
+
+2;Question, Je suis un gigantesque mammifère marin et je peux être aussi long que les bus de port louis. Je me trouve assez souvent à Tamarin. Qui suis je ?
+Réponse : baleine
+
+3;Question, j'ai une grosse carapace dur sur le dos pour me protéger dans l'océan. Je suis de couleur verte et mes pattes ressemblent à des nageoires de poisson. Je vis généralement à îles aux cerfs. Qui suis je ?
+Réponse : tortue de mer
+
+4;Question, Je suis un prédateur qui ressemble à un serpent. J'aime me cacher en dessous des rochers mais j'en sors seulement pour chasser des poissons. Je vis généralement soit à Tamarin soit à Blue Bay. Qui suis je ?
+Réponse :  murène
+
+5;Question, Je suis un poisson coloré qui ressemble un peu à un perroquet à cause de ma bouche en forme de bec. Je me trouve auprès des récifs coraliens de flic en flac et îles aux cerfs. Qui suis je ?
+Réponse : poisson-perroquet
+
+6;Question, Je suis un petit poisson coloré à rayures blanches qui aime bien me cacher dans des anémones de mer. Je suis souvent comparé à Nemo. Je vis aux alentours des coraux de Blue bay Qui suis je ?
+Réponse : poisson-clown
+
+7;Question, J'ai une carapace tout le long de mon corps, j'ai des pinces qui me servent à attraper ma nourriture et me défendre. Je vis généralement dans un trou sur une plage. Qui suis je ?
+Réponse : crabe
+
+8;Question, Je suis un poisson marin avec un corps plat, en forme d'aile. J'aime me poser sur le sable au fond de l'eau. Je vis particulièrement au sud de l'île entre Le morne et Bel Ombre. Qui suis je ?
+Réponse : raie
+
+
+9;Question, Je suis un animal intelligent avec un corps mou et une tête ronde. J'ai huit bras longs qui ressemblent à des tentacules. Je peux aussi changer de couleur pour me camoufler des prédateurs. Je vis un peu partout autour de l'île. Qui suis je ?
+Réponse : pieuvre
+
+
+10;Question, Je suis un prédateur avec une nageoire sur mon dos qui fait peur. Je possède une rangée de dents pointues. Mais pas d'inquiétude, je ne suis pas très souvent présent à Maurice. Qui suis je ?
+Réponse : requin

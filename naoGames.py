@@ -10,11 +10,14 @@ import random
 
 
 ip_robot = "11.0.0.76" #ip du robot
-port=9559
-nao_audio_file="/home/nao/recording.wav"
-local_audio_file= "./recording.wav"
+port=9559 #port associé au Nao
+nao_audio_file="/home/nao/recording.wav" #le fichier audio du Nao
+local_audio_file= "./recording.wav" #le fichier audio en local sur la machine
 nao_username="nao"
 nao_password="udm2021"
+fichier="Questions.txt"
+
+
 
 #Fonction pour écouter les réponses des utilisateurs
 def record_audio():
@@ -32,6 +35,8 @@ def record_audio():
     print("Fin de l'enregistrement")
 
 
+
+
 #Fonction pour transférer le fichier audio localement
 def transfer_audio_file():
     print("Transfert du fichier de Nao à la machine local...")
@@ -44,6 +49,8 @@ def transfer_audio_file():
     scp.get(nao_audio_file, local_audio_file)
     scp.close()
     print("Transfert complété")
+
+
 
 
 #Fonction pour convertir l'audio en texte
@@ -67,18 +74,24 @@ def speech_to_text():
             return None
 
 
+
+
 #Fonction de présentation de Nao
 def presentation():
     tts.say("Salut, je m'appele Nao, On va jouer au jeu du Qui-suis je")
-    time.sleep(2)
+    time.sleep(0.5)
     tts.say("Veux-tu que je texplique comment jouer au jeu ?")
-    record_audio()
-    transfer_audio_file()
-    reponse = speech_to_text()
-    if "oui" in reponse or "ouais" in reponse:
-        regles() 
-    else :
-        return
+    while(True) :
+        record_audio()
+        transfer_audio_file()
+        reponse = speech_to_text()
+        if "oui" in reponse or "ouais" in reponse:
+            regles() 
+            break
+        elif "non" in reponse :
+            break
+        else :
+            tts.say("je n'ai pas très bien compris, peux tu me répondre par oui ou par non ?")
 
 
 
@@ -86,6 +99,7 @@ def presentation():
 # Fonction pour énoncer les règles du jeu
 def regles():
     tts.say("Voici les règles du jeu, je vais décrire plusieurs animaux marins et tu devras deviner lequel c'est. Tu auras trois chances pour répondre correctement. Si tu réponds bien tu auras un point, si tu réponds faux, tu ne gagnes aucun point")
+    time.sleep(0.5)
     tts.say("As-tu compris ?")
     record_audio()
     transfer_audio_file()
@@ -94,6 +108,8 @@ def regles():
         return 
     else :
         tts.say("Alors je vais reformuler, tu devras deviner l'animal que je vais décrire. Mais attention tu n'as que 3 chances seulement de répondre juste. Tu as un point si tu as la bonne réponse et pas de points si tu réponds pas bien")
+
+
 
 
 #Fonction de validation des réponses
@@ -119,6 +135,38 @@ def verification(mot, pts):
     return pts
 
 
+
+#Fonction pour parcourir un fichier texte avec les informations sur les questions et la réponse associée
+def get_question_reponse(fichier, numero_question):
+    numero_question = str(numero_question)
+
+    with open(fichier, "r") as file:
+        lignes = file.readlines()  # Lire toutes les lignes du fichier
+    
+    question = None
+    reponse = None
+    question_en_cours = []  # Liste pour accumuler les lignes de la question
+
+    for i, ligne in enumerate(lignes):
+        if ligne.strip().startswith(numero_question):  # Vérifie si la ligne commence par le numéro
+            question_en_cours.append(ligne.split(";")[1].strip())  # Ajoute la ligne de la question
+            # Continue à ajouter les lignes suivantes tant que ce n'est pas une réponse
+            j = i + 1
+            while j < len(lignes) and "Réponse" not in lignes[j]:
+                question_en_cours.append(lignes[j].strip())
+                j += 1
+            question = " ".join(question_en_cours)  # Fusionne toutes les lignes de la question
+
+            if j < len(lignes) and "Réponse" in lignes[j]:
+                reponse = lignes[j].split(":")[1].strip()  # Prend la réponse suivante
+            break
+    
+
+    return question, reponse
+
+
+
+
 #Programme principal
 
 #Connexion au Nao
@@ -138,38 +186,15 @@ pts=0
 
 presentation()
 
-mot =["dauphin", "baleine", "tortue de mer", "murène", "poisson-perroquet", "poisson-clown", "crabe", "raie", "pieuvre", "requin"]
 
 nombreAleatoire=[]
-nombreAleatoire = random.sample(range(5), 5) #On stocke une liste de nombre aléatoire
+nombreAleatoire = random.sample(range(1, 11), 5) #On stocke une liste de nombre aléatoire
 
-#dictionnaire des choix
-choix = {
-        0: lambda: (tts.say("Question, je suis un mammifère marin, intelligent et qui aiment sauter hors de l'eau. Je me trouve assez souvent à Tamarin. Qui suis je ?"), verification(mot[0], pts)),#utilisation de lambda pour exécuter une fonction après la prise de parole
 
-        1: lambda: (tts.say("Question, Je suis un gigantesque mammifère marin et je peux être aussi long que les bus de port louis. Je me trouve assez souvent à Tamarin. Qui suis je ?"), verification(mot[1], pts)),
-
-        2: lambda: (tts.say("Question, j'ai une grosse carapace dur sur le dos pour me protéger dans l'océan. Je suis de couleur verte et mes pattes ressemblent à des nageoires de poisson. Je vis généralement à îles aux cerfs. Qui suis je ?"), verification(mot[2], pts)),
-
-        3: lambda: (tts.say("Question, Je suis un prédateur qui ressemble à un serpent. J'aime me cacher en dessous des rochers mais j'en sors seulement pour chasser des poissons. Je vis généralement soit à Tamarin soit à Blue Bay. Qui suis je ?"), verification(mot[3], pts)),
-
-        4: lambda: (tts.say("Question, Je suis un poisson coloré qui ressemble un peu à un perroquet à cause de ma bouche en forme de bec. Je me trouve auprès des récifs coraliens de flic en flac et îles aux cerfs. Qui suis je ?"), verification(mot[4], pts)),
-
-        5: lambda: (tts.say("Question, Je suis un petit poisson coloré à rayures blanches qui aime bien me cacher dans des anémones de mer. Je suis souvent comparé à Nemo. Je vis aux alentours des coraux de Blue bay Qui suis je ?"), verification(mot[5], pts)),
-
-        6: lambda: (tts.say("Question, J'ai une carapace tout le long de mon corps, j'ai des pinces qui me servent à attraper ma nourriture et me défendre. Je vis généralement dans un trou sur une plage. Qui suis je ?"), verification(mot[6], pts)),
-
-        7: lambda: (tts.say("Question, Je suis un poisson marin avec un corps plat, en forme d'aile. J'aime me poser sur le sable au fond de l'eau. Je vis particulièrement au sud de l'île entre Le morne et Bel Ombre. Qui suis je ?"), verification(mot[7], pts)),
-
-        8: lambda: (tts.say("Question, Je suis un animal intelligent avec un corps mou et une tête ronde. J'ai huit bras longs qui ressemblent à des tentacules. Je peux aussi changer de couleur pour me camoufler des prédateurs. Je vis un peu partout autour de l'île. Qui suis je ?"), verification(mot[8], pts)),
-
-        9: lambda: (tts.say("Question, Je suis un prédateur avec une nageoire sur mon dos qui fait peur. Je possède une rangée de dents pointues. Mais pas d'inquiétude, je ne suis pas très souvent présent à Maurice. Qui suis je ?"), verification(mot[9], pts)),
-}
-
-#Pour chaque nombre aléatoire générer dans la liste, on exécute la question correspondante
 for nombre in nombreAleatoire:
-    pts=choix.get(nombre, lambda: print("Choix invalide"))() #On stocke ensuite le nombre de points dans pts
-
+    question, reponse = get_question_reponse(fichier, nombre)
+    tts.say(question)
+    pts=verification(reponse, pts)
 
 
 tts.say("Tu as donc {} points sur 5.".format(pts))
